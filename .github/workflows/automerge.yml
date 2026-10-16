@@ -20,4 +20,4 @@ jobs:
             sleep 10
           done
         env:
-          GH_TOKEN: ${{ secrets.MY-GH-TOKEN }}
+          GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
