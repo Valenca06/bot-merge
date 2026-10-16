@@ -1,28 +1,29 @@
-name: Snipe Merge Spacewar (6 Horas)
+name: Snipe Merge Spacewar (Teste 1 Minuto)
 
 on:
-  workflow_dispatch: # Apenas acionamento manual pelo botão
+  workflow_dispatch:
 
 jobs:
   snipe:
     runs-on: ubuntu-latest
     steps:
-      - name: Tentativas de Merge Contínuas
+      - name: Tentativas de Merge (1 Minuto)
         env:
           GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
         run: |
-          # 2160 tentativas x (10 seg de sleep + ~1 seg de execução) = ~6 horas
-          for i in {1..2160}; do
+          # 6 tentativas com intervalo de 10 segundos = ~1 minuto
+          for i in {1..6}; do
             echo "Tentativa $i: Tentando dar merge no PR #1202..."
             
-            # Tenta fazer o merge
             if gh pr merge 1202 --repo BecoSystems/spacewar --merge; then
               echo "🚀 SUCESSO! MERGE REALIZADO NA TENTATIVA $i!"
-              exit 0 # Encerra o script com sucesso imediatamente
+              exit 0
             fi
             
-            # Espera 10 segundos cravados pelo relógio interno da máquina antes da próxima tentativa
             sleep 10
           done
           
-          echo "⏱️ Tempo esgotado. O limite de 6 horas do servidor foi atingido sem sucesso no merge."
+          echo "⏱️ 1 minuto concluído. Disparando o próximo ciclo automático!"
+          
+          # Dispara a si mesmo novamente
+          gh workflow run automerge.yml --repo ${{ github.repository }}
