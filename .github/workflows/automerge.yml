@@ -1,15 +1,17 @@
 name: Snipe Merge Spacewar
 
 on:
-  workflow_dispatch: # Permite acionar manualmente no botão
+  workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *' # Roda automaticamente a cada 5 minutos na nuvem
+    - cron: '*/6 * * * *'
 
 jobs:
   snipe:
     runs-on: ubuntu-latest
     steps:
       - name: Tentativas de Merge
+        env:
+          GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
         run: |
           for i in {1..24}; do
             echo "Tentativa $i: Tentando dar merge no PR #1202..."
@@ -19,5 +21,3 @@ jobs:
             fi
             sleep 10
           done
-        env:
-          GH_TOKEN: ${{ secrets.MY_GH_TOKEN }}
